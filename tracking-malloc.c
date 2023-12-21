@@ -124,7 +124,7 @@ static void *get_real_ptr(void *ptr, size_t *size)
 	return (void *)real_ptr;
 }
 
-static void contidional_track_memory(char v, size_t size)
+static void conditional_track_memory(char v, size_t size)
 {
 	char buf[40];
 	char *track;
@@ -179,7 +179,7 @@ void *malloc(size_t size)
 
 	ptr = (real_ptr + (sizeof(size_t)));
 
-	contidional_track_memory('+', size);
+	conditional_track_memory('+', size);
 
 	return ptr;
 }
@@ -241,7 +241,7 @@ void *calloc(size_t nmemb, size_t size)
 
 	ptr = (real_ptr + (sizeof(size_t)));
 
-	contidional_track_memory('+', size);
+	conditional_track_memory('+', size);
 
 	return ptr;
 }
@@ -291,9 +291,9 @@ void *realloc(void *ptr, size_t new_size)
 
 	memcpy(real_new_ptr, &new_size, sizeof(size_t));
 	if (old_size) {
-		contidional_track_memory('-', old_size);
+		conditional_track_memory('-', old_size);
 	}
-	contidional_track_memory('+', new_size);
+	conditional_track_memory('+', new_size);
 
 	new_ptr = (void *)(real_new_ptr + (sizeof(size_t)));
 
@@ -345,5 +345,5 @@ void free(void *ptr)
 
 	(*real_free) (real_ptr);
 
-	contidional_track_memory('-', size);
+	conditional_track_memory('-', size);
 }
